@@ -1,0 +1,190 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH products #}
+{# This page can use any data from http:localhost:2000/cms/#/form/products/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this products's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+{% set pageSettings = cms.pages|where('code', item._type )|first %}
+{% set callToAction = cms.calltoactions|where('action_code', 'productpage')|first %}
+{% block content %}
+
+  {% include "templates/partials/sub-header.html" with pageSettings %}
+
+  <!-- CONTENT -->
+    <section class="section sidebar-left bg-white pt-70 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12"> 
+                    <div id="content" class="site-content">
+                        <main id="main">
+                            <!-- PRODUCT DETAIL -->
+                            <div class="product-info clearfix">
+                                <div class="product-image">
+
+                                    <div class="product-thumb mb-10">
+                                        <img src="{{ item.related_image|imageSize(270, 270) }}" alt="" />
+                                        <a href="#" data-image="{{ item.related_image.url }}" class="overlay"></a>
+                                    </div><!-- /product-thumb -->
+
+                                    <div class="product-thumb-list-slider">
+                                     {% if item.related_gallery %}
+                                        <div class="product-thumb">
+                                            <img src="{{ item.related_image|imageSize(270, 270) }}" alt="" />
+                                            <a href="#" data-image="{{ item.related_image.url }}" class="overlay"></a>
+                                        </div><!-- /product-thumb -->
+                                     {% endif %}     
+                                      {% for image in item.related_gallery %}
+                                        <div class="product-thumb">
+                                            <img src="{{ image|imageSize(270, 270) }}" alt="{{ image.caption }}" />
+                                            <a href="#" data-image="{{ image.url}}" class="overlay"></a>
+                                        </div><!-- /product-thumb -->
+                                      {% endfor %}
+                                    </div><!-- /product-thumb-list-slider -->
+
+                                </div><!-- /product-image -->
+
+                                <div class="product-detail">
+                                    <h1 class="h4 text-uppercase">{{ item.name }}</h1>
+                                    <br />
+                                    {% if item.related_partner %}     
+                                    <div class="product-thumb">
+                                            {{ item.related_partner.validation_html|safe }}
+                                        </div><!-- /product-thumb -->
+
+                                    {% endif %}                                    {% if item.show_rating %}
+                                    <div class="review clearfix">
+                                        <div class="star-rating" title="Rated 4.00 out of 5">
+                                            <span style="width: 60%"></span>
+                                        </div>
+                                        <span>(1 customer review)</span>
+                                    </div><!-- /review -->
+                                    <br />
+                                    {% endif %}
+                                    {% if item.call_for_price %}
+ 
+                                      <div class="amount">Call for Price</div>
+                                      <br />
+
+                                    {% endif %}
+                                    {% if item.show_price && item.call_for_price === false %}
+                                      <div class="amount">
+                                      {% if item.on_sale %} 
+                                        <del>${{ item.price }}</del> ${{ item.sale_price }} 
+                                      {% else %}
+                                         ${{ item.price }} 
+                                       {% endif %} 
+                                       </div>
+                                      <br />
+                                    {% endif %}
+                                    
+
+                                    <p>{{ item.summary }}</p>
+
+                                    <br />
+
+                                    {% if item.show_add_to_cart %}
+                                      <form action="http://envato.megadrupal.com/html/cortana/shop-cart.html" method="post">
+                                          <input class="input_quantity" type="text" value="" name="input_quantity">
+                                          <button type="submit" class="btn btn-black-2 radius"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+
+                                          <div class="clearfix"></div>
+                                      </form>
+
+                                      <br />
+                                     {% endif %} 
+
+                                    <ul>
+                                         {% if item.show_sku %}<li><span class="product-id">SKU:</span> 0010</li>{% endif %}
+                                         {% if item.show_tags %}
+                                           
+                                            {% if item.categories %}
+                                                <li><span class="category">Category:</span> 
+                                                {% for category in item.categories %}
+                                                    <a href="#">{{ category.title }}</a>,
+                                                {% endfor %}
+                                            </li>
+                                            {% endif %}
+
+                                            {% if item.tags %}
+                                                <li><span class="tag-links">Tags:</span> 
+                                                {% for tag in item.tags %}
+                                                    <a href="{{ url(tag) }}">{{ tag.name }}</a>,
+                                                {% endfor %}
+                                            </li>
+                                            {% endif %}
+
+                                         {% endif %}
+                                    </ul>
+
+                                    <br />
+                                    {% if item.share_on_social_media %}
+                                    <ul class="social-list primary">
+                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="icon icon-flickr"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-lastfm"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-stumbleupon"></i></a></li>
+                                    </ul>
+                                    {% endif %}
+                                </div><!-- /product-detail -->
+                            </div><!-- /product-info -->
+
+                            <!-- INFOMATION -->
+                            <div class="switch-tabs">
+                                <ul class="switch-tabs-nav clearfix">
+                                    <li class="active"><a href="#description">Description</a></li>
+                                    {% if item.content_blocks %}
+                                    <li><a href="#information">Additional Infomation</a></li>
+                                     {% endif %}  
+                                </ul><!-- /switch-tabs-nav -->
+
+                                <div class="switch-tabs-body mb-50">
+                                    <div id="description" class="switch-content">
+                                       {{ item.content|safe }}
+                                    </div><!-- /switch-content -->
+
+                                    {% if item.content_blocks %}
+                                    <div id="information" class="switch-content">
+                                           {% for contentBlock in item.content_blocks %}
+                                                {{ contentBlock.content|safe }}
+                                           {% endfor %} 
+                                    </div><!-- /switch-content -->
+                                     {% endif %}   
+                                </div><!-- /switch-tabs-body -->
+                            </div><!-- /switch-tabs -->
+
+                            <!-- RELATED PRODUCT -->
+                            <h2 class="section-header">Related Solutions</h2>
+                            <ul class="product clearfix">
+                             {% for object in item.related_solutions %}
+                                   <li>
+                                    <div class="product-thumb">
+                                       {% include "templates/partials/services/service-card.html" with object %}
+                                    </div><!-- /product-thumb -->
+                                </li>
+                              {% endfor %}
+                            </ul>
+                        </main>
+                    </div><!-- /site-content -->
+                </div><!-- /col -->
+
+
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / CONTENT -->
+
+    {% if callToAction %}
+        {% include "templates/partials/widgets/call-to-action.html" with callToAction %}
+    {% endif %}
+    
+{% endblock %}

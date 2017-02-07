@@ -1,0 +1,120 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH news #}
+{# This page can use any data from http:localhost:2000/cms/#/form/news/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this news's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+{% set categories = cms.classificationcategories|where('content_type', 'News')%}
+{% set recentPosts = cms.news|slice(0, 5) %}
+{% set pageSettings = cms.pages|where('code', item._type )|first %}
+{% block content %}
+
+    {% include "templates/partials/sub-header.html" with pageSettings %}
+
+
+    <!-- CONTENT -->
+    <section class="section bg-white pt-70 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-12 col-xs-12">
+                    <div id="content" class="site-content">
+                        <main id="main">
+                            <article class="post format-standard mb-40">
+                            {% if item.related_image %}
+                                <div class="post-thumbnail">
+                                    <img src="{{ item.related_image.url }}" alt="" />
+                                    <!-- <a href="news-single.html" class="overlay"><i class="fa fa-link"></i></a> -->
+                                    
+                                </div><!--/ post-thumbnail -->
+                                {% endif %}
+                                <header class="entry-header">
+                                    <h2 class="entry-title h4"><a href="{{ url(item) }}">
+                                    {{ item.name }}</a></h2>
+                                    {% if item.author %}
+                                    <span class="byline">Posted by <a href="#">{{ item.author }}</a> - </span>
+                                    {% endif%}
+                                    <span class="posted-on"><a href="#">{{ item.publish_date|date('M d Y') }}</a> - </span>
+                                     {% if item.categories %}
+                                    <span>Posted in 
+                                      {% for category in item.categories %}
+                                       <a href="{{ url(category) }}">{{ category.title }}</a>,
+                                       {% endfor %}
+                                      </span>
+                                    {% endif %}
+                                </header><!-- /header -->
+
+                                <div class="entry-content">
+                                   {{ item.content|safe }}
+                                </div><!-- /entry-content -->
+
+                                {% if item.show_tags || item.show_shares%}
+                                <footer class="entry-footer">
+                                    {% if item.show_tags  %}
+                                     <span class="tags-links">
+                                         <i class="fa fa-tags"></i> Tags:
+                                         {% for tag in item.tags %}
+                                            <a href="{{ url(tag) }}">{{ tag.name }} </a>
+                                            {% if !loop.last %}
+                                            , 
+                                            {% endif %}
+                                        {% endfor %}
+                                      </span>
+                                     {% endif %}   
+                                     {% if item.show_shares %}
+                                    <span class="share-link"><i class="fa fa-share-alt"></i> <a href="#">Shares</a></span>
+                                    {% endif %}  
+                                </footer><!-- /entry-footer -->
+                                {% endif %}
+                            </article><!-- /post -->
+
+                        </main>
+                    </div><!-- /site-content -->
+                </div><!-- /col -->
+
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    <div id="sidebar" class="sidebar">
+                        <div id="widget-area">
+                            {% if categories %}
+                            <aside class="widget widget_categories">
+                                <h3 class="widget-title h5">Categories</h3>
+                                <ul>
+                                    {% for category in categories %}
+                                    <li class="cat-item">
+                                        <a href="{{ url(category) }}">{{ category.title }} ({{ category.news_categories|size }})</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </aside><!-- /widget_categories -->
+                            {% endif %}  
+                            {% if recentPosts %}
+                            <aside class="widget widget_recent_entries">
+                                <h3 class="widget-title h5">Recent Posts</h3>
+                                <ul>
+                                {% for newsPost in recentPosts %}
+                                    <li>
+                                        <a href="{{ url(newsPost) }}" title="{{ newsPost.name }}">
+                                            <img src="{{ newsPost.related_image.url }}" alt="{{ newsPost.name }}">
+                                            <span class="title" data-number-line="2">{{ newsPost.name }}...</span>
+                                        </a>
+                                        <span class="date">{{ newsPost.publish_date|date('M d Y') }}</span>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                            </aside><!-- /widget_recent_entries -->
+                            {% endif %}
+                        </div><!-- /widget-area -->
+                    </div><!-- /sidebar -->
+                </div><!-- /col -->
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / CONTENT -->
+
+{% endblock %}

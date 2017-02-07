@@ -1,0 +1,17 @@
+ {
+     "@context": "http://schema.org",
+     "@type": "WebSite",
+     "url": "http://www.example.com/",
+     "name": "{{ getSetting('site_name') }}",
+     "author": {
+         "@type": "Person",
+         "name": "Biz N' Links"
+     },
+     "description": "{{ getSetting('site_description') }}",
+     "publisher": "Biz N' Links",
+     "potentialAction": {
+         "@type": "SearchAction",
+         "target": "http://www.konnexx.net/search-results/?q={search_term}",
+         "query-input": "required name=search_term"
+     }
+ }

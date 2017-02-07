@@ -1,0 +1,57 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH pages #}
+{# This page can use any data from http:localhost:2000/cms/#/form/pages/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this pages's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {% if item.seo_title %}{{ item.seo_title }} {% else %} {{ item.name }} {% endif %}{% endblock %}
+{% set subMenu = cms.pagemenus|where('menu_code', 'about_us_menu')|first %}
+{% set menuPages =  subMenu.pages_related_menus %}
+{% set callToAction = cms.calltoactions|where('action_code', 'aboutpages')|first %}
+
+{% block content %}
+{% set contactWidgetHeader = "Main Office" %}
+
+  {% block subHeader %}  
+    {% include "templates/partials/sub-header-pages.html" %}
+  {% endblock %}
+  
+   <section class="section bg-white pt-70 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-md-push-3 col-sm-12 col-xs-12">
+                    <div id="content" class="site-content">
+                        <main id="main">
+                            {% block siteContent %}{% endblock %}
+                        </main>
+                    </div><!-- /site-content -->
+                </div><!-- /col -->
+
+                <div class="col-md-3 col-md-pull-9 col-sm-12 col-xs-12">
+                    <div id="sidebar" class="sidebar">
+                        <div id="widget-area">
+
+                            {% include "templates/partials/widgets/menu-vertical.html" with menuPages %}
+
+                            
+
+                            {% include "templates/partials/contact/contact-widget.html" %}
+                        </div><!-- /widget-area -->
+                    </div><!-- /sidebar -->
+                </div><!-- /col -->
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / CONTENT -->
+
+    {% if callToAction %}
+        {% include "templates/partials/widgets/call-to-action.html" with callToAction %}
+    {% endif %}
+    
+{% endblock %}

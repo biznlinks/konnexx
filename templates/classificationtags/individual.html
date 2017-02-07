@@ -1,0 +1,90 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH classificationtags #}
+{# This page can use any data from http:localhost:2000/cms/#/form/classificationtags/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this classificationtags's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+ 
+{% block content %}
+  {% include "templates/partials/sub-header.html" %} 
+   <!-- CONTENT -->
+  
+   <section class="section bg-white pt-70 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-md-push-3 col-sm-12 col-xs-12">
+                    <div id="content" class="site-content">
+                        <main id="main">
+                        
+                        <h3 class="page-title">Products with '{{ item.name }}' tags </h3>
+                         {%if item.products_tags %}
+                          
+                           {% for productItem in item.products_tags %}
+                            <h2 class="section-header"><a href="{{ url(productItem) }}" title="{{ productItem.name }}">
+                            {{ productItem.name }} </a></h2>
+                            <div class="page-grid">
+                                <!-- GRID 9 COLUMNS -->
+                                <div class="page-media col-2 col-push-7 static">
+                                    <div class="client-logo">
+                                        <img src="{{ productItem.related_image.url }}" alt="" />
+                                    </div><!-- /client-logo -->
+                                </div><!-- /page-media -->
+
+                                <div class="page-content col-7 col-pull-2">
+                                    <p>{{ productItem.summary }} </p>
+                                </div><!-- /page-content -->
+                            </div><!-- /page-grid -->
+                            {% endfor %}
+                            {%else%}
+                              <p>No products found</p>
+                            {% endif %}
+                            
+                            
+                         <h3 class="page-title mt-20" >News with '{{ item.name }}' tags </h3>
+                         {%if item.news_tags %}
+                          
+                           {% for newsItem in item.news_tags %}
+                            <h2 class="section-header"><a href="{{ url(newsItem) }}" title="{{ newsItem.name }}">
+                            {{ newsItem.name }} </a></h2>
+                            <div class="page-grid">
+                                <!-- GRID 9 COLUMNS -->
+                                <div class="page-media col-2 col-push-7 static">
+                                    <div class="client-logo">
+                                        <img src="{{ newsItem.related_image.url }}" alt="" />
+                                    </div><!-- /client-logo -->
+                                </div><!-- /page-media -->
+
+                                <div class="page-content col-7 col-pull-2">
+                                    <p>{{ newsItem.summary }} </p>
+                                </div><!-- /page-content -->
+                            </div><!-- /page-grid -->
+                            {% endfor %}
+                            {%else%}
+                              <p>No news found</p>
+                            {% endif %}
+
+                        </main>
+                    </div><!-- /site-content -->
+                </div><!-- /col -->
+
+                <div class="col-md-3 col-md-pull-9 col-sm-12 col-xs-12">
+                    <div id="sidebar" class="sidebar">
+                        <div id="widget-area">
+
+ 
+                        </div><!-- /widget-area -->
+                    </div><!-- /sidebar -->
+                </div><!-- /col -->
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / CONTENT -->
+
+{% endblock %}

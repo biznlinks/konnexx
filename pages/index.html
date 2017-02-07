@@ -1,0 +1,101 @@
+{# ------------------------------------------------------- #}
+
+{# YOUR HOMEPAGE #}
+
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+
+{# ------------------------------------------------------- #}
+
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+
+{# This sets our page <title>. It will append "- Homepage" to the site title defined in base. #}
+{% block title %}{% parent %} - Homepage{% endblock %}
+{% set slides = cms.slides %}
+{% set featuredService = cms.services|where('featured', true ) | first %}
+{% set services = cms.services|slice(1, 3) %}
+{% set news = cms.news|slice(0, 3) %}
+{% set clients = cms.clients|slice(0, 6) %}
+{% set callToAction = cms.calltoactions|where('action_code', 'homepage')|first %}
+
+
+{% block content %}
+    <!-- HOME MEDIA -->
+    <section id="home-media" class="section pt-0 pb-0" data-home-media="760">
+        <div class="tp-banner-container">
+            <div class="tp-banner" >
+                {% include "templates/partials/widgets/slide.html" with slides %}
+                <div class="tp-bannertimer"></div>
+            </div><!-- /tp-banner -->
+        </div><!-- /tp-banner-container -->
+    </section>
+    <!-- END / HOME MEDIA -->
+    
+    {% if featuredService %}
+    <!-- ABOUT -->
+    <section class="section bg-white bd-b pt-60 pb-60">
+        <div class="container">
+            {% include "templates/partials/services/featured-service.html" with featuredService %}
+        </div><!-- /container -->
+    </section>
+    <!-- END / ABOUT -->
+    {% endif %}
+
+    <!-- SERVICE -->
+    <section class="section bg-gray pt-60 pb-60"  data-search-index="false">
+        <div class="container">
+            <div class="row">
+                {% for service in services %}
+                {% set object = service %}
+                <div class="col-md-4">
+                    {% include "templates/partials/services/service-card.html" with object %}
+                </div><!-- /col -->
+                {% endfor %}
+              </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / SERVICE -->
+
+{% if news %}
+<!-- NEWS -->
+    <section class="section bg-gray bd-b pt-60 pb-20">
+        <div class="container">
+            <h2 class="section-header">Company News</h2>
+            <div class="row">
+                {% for newsItem in news %}
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    {% include "templates/partials/news/news-card.html" with newsItem %}
+                </div><!-- /col -->
+                {% endfor %}
+
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+ 
+    <!-- END / NEWS -->
+   {% endif %}
+
+    {% if clients %}
+    <!-- CLIENT -->
+    <section class="section bg-white pt-60 pb-60">
+        <div class="container">
+            <h2 class="section-header">Our Clients</h2>
+            <div class="client-slider">
+                {% for client in clients %}
+                    {% include "templates/partials/clients/client-logo.html" with client %}
+                {% endfor %}
+            </div><!-- /client-slider -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / CLIENT -->
+    {% endif %}
+
+    {% if callToAction %}
+        {% include "templates/partials/widgets/call-to-action.html" with callToAction %}
+    {% endif %}
+{% endblock %}

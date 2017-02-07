@@ -1,0 +1,14 @@
+{% set service = object %}
+
+<h2 class="section-header">{{ service.name }}</h2>
+{% if service.related_image %}
+<div class="post-thumbnail hover-link">
+
+    <img src="{{ service.related_image.url }}" alt="{{ service.name }}" />
+    <a href="{{ url(service) }}" class="overlay"><i class="fa fa-link"></i></a>
+</div><!--/ post-thumbnail -->
+{% endif %}
+<div class="mb-30">
+    <p>{{ summary }}</p>
+</div> 
+<a href="{{ url(service) }}" class="btn btn-primary radius mb-30">{{ cms.sitelabels.solution_read_more }}</a>

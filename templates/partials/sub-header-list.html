@@ -1,0 +1,19 @@
+<!-- SUB HEADER -->
+<section id="sub-header" class="section bg-parallax pt-0 pb-0" data-background="{{ background_image.url }}">
+    <div class="bg-overlay-black bg-overlay-5"></div>
+    <div class="container">
+        <div class="sub-wrapper">
+            <h1>{% if seo_title %} {{ seo_title }} {% else %} {{ name }} {% endif %}</h1>
+            <h2 class="h4"> {{ tagline }}  </h2>
+
+            <div class="breadcrumb-container clearfix">
+                <span>{{ cms.sitelabels.breadcrumb_label }} </span>
+                <ul class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{{ url(code) }}">{{ name }}</a></li>
+                </ul>
+            </div><!-- /breadcrumb -->
+        </div><!-- /sub-wrapper -->
+    </div><!-- /container -->
+</section>
+<!-- END / SUB HEADER -->

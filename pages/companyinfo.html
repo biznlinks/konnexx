@@ -1,0 +1,92 @@
+{# ------------------------------------------------------- #}
+{# ONE OFF VIEW companyinfo #}
+{# This page can use any data from http:localhost:2000/cms/#/form/companyinfo/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this companyinfo's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ cms.companyinfo.name }}{% endblock %}
+{% block content %}
+  <h1>{{ cms.companyinfo.name }}</h1>
+  <ul>
+      <li>
+        <strong>Name: </strong>
+        {{ cms.companyinfo.name }}
+      </li>
+      <li>
+        <strong>Create Date: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ cms.companyinfo.create_date|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Last Updated: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ cms.companyinfo.last_updated|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Email: </strong>
+        {{ cms.companyinfo.email }}
+      </li>
+      <li>
+        <strong>Website: </strong>
+        {{ cms.companyinfo.website }}
+      </li>
+      <li>
+        <strong>Phone number: </strong>
+        {{ cms.companyinfo.phone_number }}
+      </li>
+      <li>
+        <strong>Address: </strong>
+        <address>
+          {{ cms.companyinfo.address.street1 }}<br/>
+          {% if cms.companyinfo.address.street2 %}{{ cms.companyinfo.address.street2 }}<br/>{% endif %}
+          {{ cms.companyinfo.address.city }}, {{ cms.companyinfo.address.state }}. {{ cms.companyinfo.address.country }} {{ cms.companyinfo.address.zip }}
+        </address>
+      </li>
+      <li>
+        <strong>Geolocation: </strong>
+        {% if cms.companyinfo.geolocation %}
+        <ul>
+          <li>Latitude: {{ cms.companyinfo.geolocation.latitude }}</li>
+          <li>Longitude: {{ cms.companyinfo.geolocation.longitude }}</li>
+          <li>
+          <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ cms.companyinfo.geolocation.latitude }},{{ cms.companyinfo.geolocation.longitude }}&zoom=8&size=400x400&markers=color:red%7C{{ cms.companyinfo.geolocation.latitude }},{{ cms.companyinfo.geolocation.longitude }}" />
+          </li>
+        </ul>
+        {% endif %}
+      </li>
+      <li>
+        <strong>Social Accounts: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in cms.companyinfo.social_accounts %}
+            <li>
+              <strong>Title: </strong>
+              {{ row.title }}
+            </li>
+            <li>
+              <strong>Icon: </strong>
+              {{ row.icon }}
+            </li>
+            <li>
+              <strong>Account Url: </strong>
+              {{ row.account_url }}
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Preview URL: </strong>
+        {{ cms.companyinfo.preview_url }}
+      </li>
+      <li>
+        <strong>Slug: </strong>
+        {{ cms.companyinfo.slug }}
+      </li>
+  </ul>
+{% endblock %}

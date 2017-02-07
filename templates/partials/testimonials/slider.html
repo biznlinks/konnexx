@@ -1,0 +1,8 @@
+
+<div class="testimonial testimonial-slider" data-number-slide="1">
+    
+    {% for testimonial in testimonials|sort('name') %}
+        {% include "templates/partials/testimonials/single.html" with testimonial only %}
+    {% endfor %}
+
+</div><!-- /testimonial -->

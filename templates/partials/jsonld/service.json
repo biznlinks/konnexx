@@ -1,0 +1,16 @@
+,
+ {
+    "@context": "http://schema.org/",
+    "@type": "Service",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "{{ getSetting('site_name')}}",
+      "image": "{{ getSetting('site_url') }}{{ item.related_image.url }}"
+    },
+    "name": "{{ item.name }}",
+    "url": "{{ getSetting('site_url') }}{{ url(item) }}",
+    "category": "{% for category in item.seo_categories %}{{ category.name }}{% endfor %}",
+    "description": "{{ item.summary}}",
+    "image": "{{ getSetting('site_url') }}{{ item.related_image.url }}",
+    "providerMobility": "dynamic"
+  }

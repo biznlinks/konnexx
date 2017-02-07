@@ -1,0 +1,83 @@
+{# The first thing we do is call page menu data from the CMS. #}
+{% set data = cms.pagemenus|where('menu_code', 'main_menu') | first%}
+{% set businessInfo = cms.businessinformation %}
+{% set socialAccounts = cms.socialmediaaccounts %}
+
+<header class="header head3"  data-search-index="false">
+    <div class="searchbar">
+    <form action="/search-results/" method="get" data-search-index="false">
+        <div class="container">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input type="text" name="q" placeholder="Search" id="tipue_search_input" />
+                <span class="input-group-btn" style="background-color: transparent;  border: 0; ">
+                <button type="button" class="btn-close"></button></span>
+            </div><!-- /input-group -->
+        </div><!-- /container -->
+            </form>
+    </div><!-- /searchbar -->
+
+
+    <div class="top-header">
+        <div class="container">
+            {% if socialAccounts %}
+            <div class="top-left">
+                <ul class="social-header">
+                    {% for account in socialAccounts %}
+                        <li><a href="{{ account.account_url }}"><i class="fa fa-{{ account.name }}"></i></a></li>
+                    {% endfor %}
+                </ul><!-- /social-header -->
+            </div><!-- /top-left -->
+            {% endif %}
+            <div class="top-right">
+                <ul class="info-header">
+                    <li><i class="icon icon-phone"></i>{{ businessInfo.main_business_phone }}</li>
+                    <li><i class="icon icon-clock"></i>{{ businessInfo.primary_location.working_hours}}</li>
+                </ul><!-- /info-header -->
+            </div><!-- /top-right -->
+        </div><!-- /container -->
+    </div><!-- /top-header -->
+
+    <div class="main-header main-header-3">
+        <div class="container">
+            <!-- LOGO -->
+            <div class="logo">
+                <a href="/">
+                    <img src="/static/img/logo.png" alt="logo">
+                </a>
+            </div><!-- /#logo -->
+            <!-- END / LOGO -->
+
+            <!-- MOBILE MENU -->
+            <div class="mobile-nav-menu" data-menu-number="3">
+                <span class="icon">&nbsp;</span>
+            </div><!-- /mobile-nav-menu -->
+            <!-- /END MOBILE MENU -->
+
+            <!-- SEARCH BUTTON -->
+            <div class="search-btn"><span class="fa fa-search"></span></div>
+            <!-- END / SEARCH BUTTON -->
+
+            <!-- NAVIGATION -->
+            <nav class="navigation nav3" data-menu-type="1199">
+                <ul class="nav text-uppercase">
+                 {% for menuItem in data.pages_related_menus %}
+                    {% if menuItem.child_menu && menuItem.page_type != "Redirection Page"%}
+                        <li class="menu-item-has-children">
+                           <a href="#">{{ menuItem.name }} <span class="fa fa-angle-down"></span></a>
+                          </li>
+                    {% else %}
+                        <li>
+                            <a href="{% if menuItem.page_type === "Redirection Page" %} 
+                            {{menuItem.redirection_url}} {% else %}{{ url(menuItem) }} {% endif %}">
+                            {{ menuItem.name }}</a>
+                        </li>
+                    {% endif %}
+                 {% endfor %}
+
+                </ul><!-- /nav -->
+            </nav>
+            <!-- END / NAVIGATION -->
+        </div><!-- /container -->
+    </div><!-- /main-header -->
+</header>

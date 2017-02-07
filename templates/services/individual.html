@@ -1,0 +1,178 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH services #}
+{# This page can use any data from http:localhost:2000/cms/#/form/services/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this services's name to the site title defined in base.html #}
+
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+{% set testimonials = item.testimonials  %}  
+{% set faqs = item.faqs  %}  
+{% set clients = item.clients  %}  
+{% set media = item.media_asset %}
+{% set products = item.products_related_solutions %}
+{# Grab all services from the CMS. Assign them to the services variable #}
+{% set services = get('services') %}
+{% set contactWidgetHeader = "Main Office" %}
+{% set pageSettings = cms.pages|where('code', item._type )|first %}
+{% set callToAction = cms.calltoactions|where('action_code', 'solutionpage')|first %}
+
+{% block description %}
+  {% parent %}
+  {% if item.seo_description %} {{ item.seo_description }} {% else %} {{ item.summary }} {% endif %}
+{% endblock %}
+
+{% block jsonld %}
+      {% include "templates/partials/jsonld/service.json" %}
+{% endblock %}
+
+{% block content %}
+
+    {% include "templates/partials/sub-header.html" with pageSettings %}
+
+    <!-- CONTENT -->
+    <section class="section bg-white pt-70 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-md-push-3 col-sm-12 col-xs-12">
+                    <div id="content" class="site-content">
+                        <main id="main">
+                            <h2 class="section-header">{{ item.name }}</h2>
+
+                            {% if item.gallery %}
+                                <div class="work-slider mb-20">
+                                {% for image in item.gallery %}
+                                        <img src="{{ image.url }}" alt="{{ image.caption }}" />
+                                    {% endfor %}
+                                </div><!-- /work-slider -->
+
+                                <div class="work-item-slider-wrapper">
+                                    <div class="work-item-slider">
+                                    {% for image in item.gallery %}
+                                        <a href="#"> <img src="{{ image|imageSize(320, 213)  }}" alt="{{ image.caption }}" /></a>
+                                    {% endfor %}
+                                    </div><!-- /work-slider -->
+                                </div><!-- /work-item-slider-wrapper -->
+
+                                <div class="divider pt-20"></div>
+                            {% endif %}
+
+                            <div class="page-grid">
+                                <!-- GRID 9 COLUMNS -->
+                                <div class="page-content  {% if  item.enable_media_download %} col-5  {% else %} col-9 {% endif%}">
+                                    {% if item.gallery %}<h2 class="section-header">Description</h2>{% endif %}
+                                  
+                                     {{ item.content|safe }}
+                                </div><!-- /page-content -->
+                                
+                                {% if item.enable_media_download %}
+                                    <div class="page-media col-4">
+                                        <h2 class="section-header">Download Media Asset</h2>
+                                        {% include "templates/partials/mautic-form.html" with item %}
+                                    </div><!-- /page-media-download -->
+                                {% endif %}  
+                                
+
+
+                            </div><!-- /page-grid -->
+
+                            {% if item.content_blocks %}
+                                {% for contentBlock in item.content_blocks %}
+                                    <div class="row">
+                                        {% if contentBlock.related_image %} 
+                                        <div class="col-md-6  col-sm-12 col-xs-12">
+                                            <div class="mb-30">
+                                                <img src="{{ contentBlock.related_image|imageSize('auto', 300)}}" alt="" />
+                                            </div>
+                                        </div><!-- /col -->
+                                        {% endif %}
+                                        
+                                        <div class="{% if contentBlock.related_image %}  col-md-6 {% else %} col-md-12 {% endif %} col-sm-12 col-xs-12">
+                                            <h2 class="section-header big">{{ contentBlock.title }}</h2>
+                                            <div class="mb-30">
+                                                <p>{{ contentBlock.content|safe }}</p>
+                                            </div>
+                                        </div><!-- /col -->
+                                    </div><!-- /row -->
+                                {% endfor %}    
+                            {% endif %}
+
+                           {% if item.enable_query_form %}
+                                <div class="divider"></div>
+                                <div class="page-media col-4">
+                                    <h2 class="section-header">Tell us about your project</h2>
+                                    {% include "templates/partials/mautic-form.html" %}
+                                </div><!-- /page-media-download -->
+                           {% endif %}  
+
+                            {% if faqs %}
+                                <div class="divider"></div>
+                                
+                                {% include "templates/partials/faqs.html" with faqs %}
+                            {% endif %}
+
+                            {% if faqs || clients %}
+                            <div class="divider"></div>
+                            {% endif %} 
+
+                            <div class="page-grid">
+                                 {% if faqs %}
+                                 
+                                    <div class="page-content col-5">
+                                        <h2 class="section-header">Testimonials</h2>
+                                        {% include "templates/partials/testimonials/slider.html" with testimonials %}
+                                    </div><!-- /page-content -->
+                                  {% endif %}  
+                                
+                                {% if clients %}
+                                <div class="page-media {% if !faqs %} col-9 {% else %} col-4 {% endif %}">
+                                    {% include "templates/partials/clients/featured-clients.html" with clients %}
+                                </div><!-- /page-content -->
+                                {% endif %}
+                            </div><!-- /page-grid -->
+
+                        </main>
+                    </div><!-- /site-content -->
+                </div><!-- /col -->
+
+                <div class="col-md-3 col-md-pull-9 col-sm-12 col-xs-12">
+                    <div id="sidebar" class="sidebar">
+                        <div id="widget-area">
+                            <aside class="widget widget_linklist"  data-search-index="false">
+                                <ul>
+                                    {# List all services, sort alphabetically #}
+                                    {% for service in services|sort("name") %}
+                                        <li {% if service.name === item.name %} class="active" {% endif %}>
+                                             <a href="{{ url(service) }}" class="btn btn-gray fullwidth text-left">
+                                             {{ service.name }}
+                                             </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </aside><!-- /widget_linklist -->
+                             {% if products %}
+                             {% include "templates/partials/products/service-products-sidebar.html" %} 
+                             {% endif %}   
+          
+
+                        </div><!-- /widget-area -->
+                    </div><!-- /sidebar -->
+                </div><!-- /col -->
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+    <!-- END / CONTENT -->
+
+    {% if callToAction %}
+        {% include "templates/partials/widgets/call-to-action.html" with callToAction %}
+    {% endif %}
+
+
+{% endblock %}

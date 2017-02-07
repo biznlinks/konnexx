@@ -1,0 +1,170 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH slides #}
+{# This page can use any data from http:localhost:2000/cms/#/form/slides/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this slides's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+{% block content %}
+  <p><a href="{{ url('slides') }}">View a list of all slides</a></p>
+  <h1>{{ item.name }}</h1>
+  <ul>
+      <li>
+        <strong>Name: </strong>
+        {{ item.name }}
+      </li>
+      <li>
+        <strong>Create Date: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ item.create_date|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Last Updated: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ item.last_updated|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Publish Date: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ item.publish_date|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Settings: </strong>
+        {{ item.settings }}
+      </li>
+      <li>
+        <strong>Transition: </strong>
+        {{ item.transition }}
+      </li>
+      <li>
+        <strong>Slot Amount: </strong>
+        {{ item.slot_amount }}
+      </li>
+      <li>
+        <strong>Master Speed: </strong>
+        {{ item.master_speed }}
+      </li>
+      <li>
+        <strong>Save Performance: </strong>
+        {{ item.save_performance }}
+      </li>
+      <li>
+        <strong>Image Settings: </strong>
+        {{ item.image_settings }}
+      </li>
+      <li>
+        <strong>Dummy Image: </strong>
+        {# Relationship. Note that use the label you set for the relation, not the content-type name. #}
+        {# You can ouput more than just the name. Feel free to output more fields from the CMS. #}
+        <a href="{{ url(item.dummy_image) }}">{{ item.dummy_image.name }}</a>
+      </li>
+      <li>
+        <strong>Image: </strong>
+        {# Relationship. Note that use the label you set for the relation, not the content-type name. #}
+        {# You can ouput more than just the name. Feel free to output more fields from the CMS. #}
+        <a href="{{ url(item.image) }}">{{ item.image.name }}</a>
+      </li>
+      <li>
+        <strong>Background Position: </strong>
+        {{ item.background_position }}
+      </li>
+      <li>
+        <strong>Background Fit: </strong>
+        {{ item.background_fit }}
+      </li>
+      <li>
+        <strong>Background Repeat: </strong>
+        {{ item.background_repeat }}
+      </li>
+      <li>
+        <strong>Layer Settings: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in item.layer_settings %}
+            <li>
+              <strong>Title: </strong>
+              {{ row.title }}
+            </li>
+            <li>
+              <strong>Class: </strong>
+              {{ row.class }}
+            </li>
+            <li>
+              <strong>Position X: </strong>
+              {{ row.position_x }}
+            </li>
+            <li>
+              <strong>Position Y: </strong>
+              {{ row.position_y }}
+            </li>
+            <li>
+              <strong>Offset: </strong>
+              {{ row.offset }}
+            </li>
+            <li>
+              <strong>Speed: </strong>
+              {{ row.speed }}
+            </li>
+            <li>
+              <strong>Start: </strong>
+              {{ row.start }}
+            </li>
+            <li>
+              <strong>Easing: </strong>
+              {{ row.easing }}
+            </li>
+            <li>
+              <strong>Split In: </strong>
+              {{ row.split_in }}
+            </li>
+            <li>
+              <strong>Split Out: </strong>
+              {{ row.split_out }}
+            </li>
+            <li>
+              <strong>Element Delay: </strong>
+              {{ row.element_delay }}
+            </li>
+            <li>
+              <strong>End Element Delay: </strong>
+              {{ row.end_element_delay }}
+            </li>
+            <li>
+              <strong>Style: </strong>
+              {{ row.style }}
+            </li>
+            <li>
+              <strong>Call to Action Settings: </strong>
+              {{ row.call_to_action_settings }}
+            </li>
+            <li>
+              <strong>Call To Action: </strong>
+              {{ row.call_to_action }}
+            </li>
+            <li>
+              <strong>Target URL: </strong>
+              {{ row.target_url }}
+            </li>
+            <li>
+              <strong>CTA Button Style: </strong>
+              {{ row.cta_button_style }}
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Preview URL: </strong>
+        {{ item.preview_url }}
+      </li>
+      <li>
+        <strong>Slug: </strong>
+        {{ item.slug }}
+      </li>
+  </ul>
+{% endblock %}

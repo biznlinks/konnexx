@@ -1,0 +1,10 @@
+
+<aside class="widget widget_linklist"  data-search-index="false">
+    <ul>
+        {% for page in menuPages %}
+            <li  {% if getCurrentUrl() == url(page) %} class="active" {% endif %}>
+            <a href="{% if page.page_type == "Page" %} {{ url(page) }} {% else %} {{ page.redirection_url }} {% endif %}" class="btn btn-gray fullwidth text-left">{{ page.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</aside><!-- /widget_linklist -->

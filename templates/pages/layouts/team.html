@@ -1,0 +1,74 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH pages #}
+{# This page can use any data from http:localhost:2000/cms/#/form/pages/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/about-template.html" %}
+{# This sets our page <title>. It will append this pages's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+{% set ceo = cms.companyteam|where('job_title', 'CEO')|first %}
+{% set team =  cms.companyteam %}
+
+{% block siteContent %}
+
+        <div class="page-grid">
+        <!-- GRID 9 COLUMNS -->
+        <div class="page-media col-4 static">
+            <img src="{{ ceo.related_image.url }}" alt="{{ ceo.name }}" />
+        </div><!-- /page-media -->
+
+        <div class="page-content col-5">
+            <h2 class="section-header">{{ ceo.job_title}} - {{ ceo.name }}</h2>
+            {{ ceo.experience|safe }}
+            <br />
+            {% if ceo.show_social_accounts %}
+            <ul class="social-list black">
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="icon icon-flickr"></i></a></li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+            </ul>
+            {% endif %}
+        </div><!-- /page-content -->
+    </div><!-- /page-grid -->
+
+    <div class="divider pt-20"></div>
+
+    <div class="row row-eq-height">
+        {% for teamMember in team %}
+        <div class="col-sm-4 col-xs-12">
+  
+            <div class="team-leader">
+                <div class="avatar hover-link">
+                    <img src="{{ teamMember.related_image.url }}" alt="" />
+                    <a href="our-leaders.html" class="overlay"><i class="fa fa-link"></i></a>
+                </div><!-- /avatar -->
+                <h4 class="h5 text-uppercase">{{ teamMember.name }}</h4>
+                <h5>{{ teamMember.job_title }}</h5>
+                <div class="mb-20">
+                    {{ teamMember.experience|safe  }}
+                </div>
+                {% if ceo.show_social_accounts %}
+                <ul class="social-list black mb-30">
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="icon icon-flickr"></i></a></li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+                {% endif %}
+            </div><!-- /team-leader -->
+        </div><!-- /col -->
+        {% if loop.index == 3 %}
+            <div class="clearfix visible-sm visible-md visible-lg"></div>
+        {% endif %}
+        {% endfor %}
+   
+    </div><!-- /row -->
+                            
+
+{% endblock %}
