@@ -1,0 +1,54 @@
+usergrid.cluster_name=usergrid
+cassandra.url=localhost:9160
+cassanrda.cluster=usergrid
+elasticsearch.cluster_name=elasticsearch
+elasticsearch.hosts=localhost
+######################################################
+# Admin and test user setup
+usergrid.sysadmin.login.allowed=true
+usergrid.sysadmin.login.name=superuser
+usergrid.sysadmin.login.password=test
+usergrid.sysadmin.login.email=superuser@example.com
+usergrid.sysadmin.email=superuser@example.com
+usergrid.sysadmin.approve.users=false
+usergrid.sysadmin.approve.organizations=false
+# Base mailer account - default for all outgoing messages
+usergrid.management.mailer=superuser@example.com
+usergrid.setup-test-account=true
+usergrid.test-account.app=test-app
+usergrid.test-account.organization=test-organization
+usergrid.test-account.admin-user.username=test
+usergrid.test-account.admin-user.name=Test User
+usergrid.test-account.admin-user.email=testadmin@example.com
+usergrid.test-account.admin-user.password=test
+ 
+######################################################
+# Auto-confirm and sign-up notifications settings
+ 
+usergrid.management.admin_users_require_confirmation=false
+usergrid.management.admin_users_require_activation=false
+ 
+usergrid.management.organizations_require_activation=false
+usergrid.management.notify_sysadmin_of_new_organizations=false
+usergrid.management.notify_sysadmin_of_new_admin_users=false
+ 
+######################################################
+# URLs
+ 
+# Redirect path when request come in for TLD
+usergrid.redirect_root=http://localhost:8080/status
+ 
+usergrid.view.management.organizations.organization.activate=http://localhost:8080/accounts/welcome
+usergrid.view.management.organizations.organization.confirm=http://localhost:8080/accounts/welcome
+ 
+usergrid.view.management.users.user.activate=http://localhost:8080/accounts/welcome
+usergrid.view.management.users.user.confirm=http://localhost:8080/accounts/welcome
+ 
+usergrid.admin.confirmation.url=http://localhost:8080/management/users/%s/confirm
+usergrid.user.confirmation.url=http://localhost:8080/%s/%s/users/%s/confirm
+usergrid.organization.activation.url=http://localhost:8080/management/organizations/%s/activate
+usergrid.admin.activation.url=http://localhost:8080/management/users/%s/activate
+usergrid.user.activation.url=http://localhost:8080%s/%s/users/%s/activate
+ 
+usergrid.admin.resetpw.url=http://localhost:8080/management/users/%s/resetpw
+usergrid.user.resetpw.url=http://localhost:8080/%s/%s/users/%s/resetpw
